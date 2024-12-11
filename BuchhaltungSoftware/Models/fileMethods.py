@@ -1,8 +1,7 @@
 import os
 import string
 
-from PyQt6.QtWidgets import QApplication, QFileDialog
-app = QApplication([])
+from PyQt6.QtWidgets import QFileDialog
 fd = QFileDialog()
 
 def getFilepathAsString():
