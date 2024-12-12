@@ -4,10 +4,13 @@ import string
 from PyQt6.QtWidgets import QFileDialog
 fd = QFileDialog()
 
-def getFilepathAsString():
-    return fd.getOpenFileName()
+class FileMethod:
 
-def loadFileFromFilepath(filepath: string):
-        if filepath[0] and os.path.isfile(filepath[0]):
+    def getFilepathAsString(self):
+        return fd.getOpenFileName()
+
+    def loadCsvFromFilepath(self, filepath: string):
+        if filepath[0] and os.listdir().isfile(filepath[0]):
             with open(filepath[0], 'r') as file:
-                return file.read()
+                if file.name.lower().endswith('.csv'):
+                    return file
