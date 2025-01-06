@@ -16,7 +16,7 @@ class SalesModel:
             for row in reader:
                 for day, value in zip(days, row):
                     cleaned_value = (
-                        value.replace('€', '')
+                        value.replace('\x80', '')
                              .replace('.', '')  # Entferne Tausendertrennzeichen
                              .replace(',', '.')  # Ersetze Dezimaltrennzeichen
                              .strip()
