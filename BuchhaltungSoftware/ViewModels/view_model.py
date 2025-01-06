@@ -1,4 +1,3 @@
-# view_model.py
 from Models.model import SalesModel
 
 class SalesViewModel:
@@ -15,6 +14,11 @@ class SalesViewModel:
             self.sales_data = self.model.sales_data
         except UnicodeDecodeError:
             raise ValueError("Die Datei ist nicht im erwarteten Format. Bitte überprüfen Sie die Kodierung.")
+
+    def remove_file(self, index):
+        # Entfernt die Datei aus den Daten
+        # ToDo: Implementierung
+        pass
 
     def analyze_sales(self):
        # Analysiert die Verkäufe und aktualisiert die ViewModel-Daten

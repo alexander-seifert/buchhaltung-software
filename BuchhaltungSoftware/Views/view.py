@@ -8,30 +8,52 @@ class SalesView:
         self.view_model = SalesViewModel()
 
         # UI erstellen
-        self.file_label = tk.Label(root, text="Keine Datei ausgewählt")
-        self.file_label.pack()
+        self.create_widgets()
 
-        self.file_button = tk.Button(root, text="Datei auswählen", command=self.load_file)
-        self.file_button.pack()
+    def create_widgets(self):
+        frame = tk.Frame(self.root)
+        frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-        self.analyze_console_button = tk.Button(root, text="In Konsole analysieren", command=self.analyze_console)
-        self.analyze_console_button.pack()
+        self.file_listbox = tk.Listbox(frame, selectmode=tk.MULTIPLE)
+        self.file_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 10))
 
-        self.analyze_window_button = tk.Button(root, text="Im Fenster analysieren", command=self.analyze_window)
-        self.analyze_window_button.pack()
+        scrollbar = tk.Scrollbar(frame, orient=tk.VERTICAL, command=self.file_listbox.yview)
+        scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+        self.file_listbox.config(yscrollcommand=scrollbar.set)
+
+        button_frame = tk.Frame(frame)
+        button_frame.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.file_button = tk.Button(button_frame, text="Datei auswählen", command=self.load_file)
+        self.file_button.pack(pady=5)
+
+        self.delete_button = tk.Button(button_frame, text="Datei löschen", command=self.delete_file)
+        self.delete_button.pack(pady=5)
+
+        self.analyze_console_button = tk.Button(button_frame, text="In Konsole analysieren", command=self.analyze_console)
+        self.analyze_console_button.pack(pady=5)
+
+        self.analyze_window_button = tk.Button(button_frame, text="Im Fenster analysieren", command=self.analyze_window)
+        self.analyze_window_button.pack(pady=5)
 
     def load_file(self):
-        # Dateiauswahl-Dialog öffnen und Datei laden
-        file_path = filedialog.askopenfilename(filetypes=[("CSV-Dateien", "*.csv")])
-        if file_path:
-            self.file_label.config(text=file_path)
-            try:
-                self.view_model.load_file(file_path)
-                messagebox.showinfo("Erfolg", "Datei erfolgreich geladen!")
-            except ValueError as e:
-                messagebox.showerror("Fehler", str(e))
-            except Exception as e:
-                messagebox.showerror("Fehler", f"Fehler beim Laden der Datei: {e}")
+        # Open file dialog and load file
+        file_paths = filedialog.askopenfilenames(filetypes=[("CSV-Dateien", "*.csv")])
+        if file_paths:
+            for file_path in file_paths:
+                self.file_listbox.insert(tk.END, file_path)
+                try:
+                    self.view_model.load_file(file_path)
+                    messagebox.showinfo("Erfolg", f"Datei {file_path} erfolgreich geladen!")
+                except ValueError as e:
+                    messagebox.showerror("Fehler", f"Fehler beim Laden der Datei {file_path}: {e}")
+
+    def delete_file(self):
+        # Loesche die ausgewaehlte Datei in der Listbox und im ViewModel
+        selected_indices = self.file_listbox.curselection()
+        for index in selected_indices[::-1]:
+            self.file_listbox.delete(index)
+            self.view_model.removeFile(index)
 
     def analyze_console(self):
         # Analysieren und Ergebnis in der Konsole anzeigen
