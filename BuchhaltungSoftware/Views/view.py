@@ -1,8 +1,6 @@
-# view.py
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from ViewModels.view_model import SalesViewModel
-
 
 class SalesView:
     def __init__(self, root):
@@ -23,7 +21,7 @@ class SalesView:
         self.analyze_window_button.pack()
 
     def load_file(self):
-        """Dateiauswahl-Dialog öffnen und Datei laden."""
+        # Dateiauswahl-Dialog öffnen und Datei laden
         file_path = filedialog.askopenfilename(filetypes=[("CSV-Dateien", "*.csv")])
         if file_path:
             self.file_label.config(text=file_path)
@@ -36,7 +34,7 @@ class SalesView:
                 messagebox.showerror("Fehler", f"Fehler beim Laden der Datei: {e}")
 
     def analyze_console(self):
-        """Analysieren und Ergebnis in der Konsole anzeigen."""
+        # Analysieren und Ergebnis in der Konsole anzeigen
         self.view_model.analyze_sales()
         print("Sortierte Umsätze:")
         for day, sales in self.view_model.sorted_sales.items():
@@ -46,7 +44,7 @@ class SalesView:
             print(f"{day}: Filiale {index + 1} mit Umsatz {value}")
 
     def analyze_window(self):
-        """Analysieren und Ergebnis im Fenster anzeigen."""
+        # Analysieren und Ergebnis im Fenster anzeigen
         self.view_model.analyze_sales()
         result_window = tk.Toplevel(self.root)
         result_window.title("Analyseergebnisse")

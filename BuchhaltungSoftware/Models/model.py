@@ -1,13 +1,11 @@
-# model.py
 import csv
-
 
 class SalesModel:
     def __init__(self):
         self.sales_data = {}
 
     def load_csv(self, file_path):
-        """Lade CSV-Daten mit spezifischer Kodierung und speichere sie."""
+        # Lade CSV-Daten mit spezifischer Kodierung und speichere sie
         with open(file_path, newline='', encoding='latin1') as csvfile:
             reader = csv.reader(csvfile, delimiter=';')
             days = next(reader)  # Erste Zeile enthält die Wochentage
@@ -28,14 +26,14 @@ class SalesModel:
                         raise ValueError(f"Ungültiges Zahlenformat: {value}")
 
     def get_sorted_sales(self):
-        """Gibt eine sortierte Liste der Einnahmen pro Tag zurück."""
+        # Gibt eine sortierte Liste der Einnahmen pro Tag zurück
         sorted_data = {}
         for day, values in self.sales_data.items():
             sorted_data[day] = sorted(values, reverse=True)
         return sorted_data
 
     def get_top_filialen(self):
-        """Ermittelt die umsatzstärkste Filiale für jeden Wochentag."""
+        # Ermittelt die umsatzstärkste Filiale für jeden Wochentag
         top_filialen = {}
         for day, values in self.sales_data.items():
             max_value = max(values)
