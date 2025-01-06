@@ -1,7 +1,7 @@
 # view.py
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from view_model import SalesViewModel
+from ViewModels.view_model import SalesViewModel
 
 
 class SalesView:

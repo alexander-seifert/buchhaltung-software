@@ -1,5 +1,5 @@
 # view_model.py
-from model import SalesModel
+from Models.model import SalesModel
 
 
 class SalesViewModel:

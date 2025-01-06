@@ -15,9 +15,17 @@ class SalesModel:
 
             for row in reader:
                 for day, value in zip(days, row):
-                    cleaned_value = value.replace('€', '').replace(',', '.').strip()
-                    if cleaned_value:
-                        self.sales_data[day.strip()].append(float(cleaned_value))
+                    cleaned_value = (
+                        value.replace('€', '')
+                             .replace('.', '')  # Entferne Tausendertrennzeichen
+                             .replace(',', '.')  # Ersetze Dezimaltrennzeichen
+                             .strip()
+                    )
+                    try:
+                        if cleaned_value:
+                            self.sales_data[day.strip()].append(float(cleaned_value))
+                    except ValueError:
+                        raise ValueError(f"Ungültiges Zahlenformat: {value}")
 
     def get_sorted_sales(self):
         """Gibt eine sortierte Liste der Einnahmen pro Tag zurück."""
