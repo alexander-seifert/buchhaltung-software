@@ -1,5 +1,6 @@
 from Models.model import SalesModel
 
+
 class SalesViewModel:
     def __init__(self):
         self.model = SalesModel()
@@ -16,6 +17,6 @@ class SalesViewModel:
             raise ValueError("Die Datei ist nicht im erwarteten Format. Bitte überprüfen Sie die Kodierung.")
 
     def analyze_sales(self):
-        # Analysiert die Verkäufe und aktualisiert die ViewModel-Daten
+        # Analysiert die Umsätze und aktualisiert die ViewModel-Daten
         self.sorted_sales = self.model.get_sorted_sales()
         self.overview = self.model.get_overview()

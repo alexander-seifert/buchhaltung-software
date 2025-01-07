@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from ViewModels.view_model import SalesViewModel
 
+
 class SalesView:
     def __init__(self, root):
         self.root = root

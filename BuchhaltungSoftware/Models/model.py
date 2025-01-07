@@ -1,5 +1,6 @@
 import csv
 
+
 class SalesModel:
     def __init__(self):
         self.sales_data = {}
@@ -16,9 +17,9 @@ class SalesModel:
                 for day, value in zip(days, row):
                     cleaned_value = (
                         value.replace('\x80', '')
-                             .replace('.', '')  # Entferne Tausendertrennzeichen
-                             .replace(',', '.')  # Ersetze Dezimaltrennzeichen
-                             .strip()
+                        .replace('.', '')  # Entferne Tausendertrennzeichen
+                        .replace(',', '.')  # Ersetze Dezimaltrennzeichen
+                        .strip()
                     )
                     try:
                         if cleaned_value:
@@ -42,23 +43,3 @@ class SalesModel:
                 overview[top_filiale[0]] = 0
             overview[top_filiale[0]] += 1
         return overview
-
-class SalesViewModel:
-    def __init__(self):
-        self.model = SalesModel()
-        self.sales_data = {}
-        self.sorted_sales = {}
-        self.overview = {}
-
-    def load_file(self, file_path):
-        # Lädt die Datei und aktualisiert die Daten
-        try:
-            self.model.load_csv(file_path)
-            self.sales_data = self.model.sales_data
-        except UnicodeDecodeError:
-            raise ValueError("Die Datei ist nicht im erwarteten Format. Bitte überprüfen Sie die Kodierung.")
-
-    def analyze_sales(self):
-        # Analysiert die Verkäufe und aktualisiert die ViewModel-Daten
-        self.sorted_sales = self.model.get_sorted_sales()
-        self.overview = self.model.get_overview()
