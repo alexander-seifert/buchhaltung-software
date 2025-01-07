@@ -1,6 +1,4 @@
-# view_model.py
 from Models.model import SalesModel
-
 
 class SalesViewModel:
     def __init__(self):

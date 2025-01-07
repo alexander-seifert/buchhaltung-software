@@ -1,6 +1,5 @@
 import csv
 
-
 class SalesModel:
     def __init__(self):
         self.sales_data = {}
@@ -43,7 +42,6 @@ class SalesModel:
                 overview[top_filiale[0]] = 0
             overview[top_filiale[0]] += 1
         return overview
-
 
 class SalesViewModel:
     def __init__(self):
