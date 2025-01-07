@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from ViewModels.view_model import SalesViewModel
 
+
 class SalesView:
     def __init__(self, root):
         self.root = root
@@ -53,17 +54,17 @@ class SalesView:
         selected_indices = self.file_listbox.curselection()
         for index in selected_indices[::-1]:
             self.file_listbox.delete(index)
-            self.view_model.removeFile(index)
 
     def analyze_console(self):
         # Analysieren und Ergebnis in der Konsole anzeigen
         self.view_model.analyze_sales()
-        print("Sortierte Umsätze:")
+        print("Top-Filialen pro Tag:")
         for day, sales in self.view_model.sorted_sales.items():
-            print(f"{day}: {sales}")
-        print("\nTop-Filialen:")
-        for day, (index, value) in self.view_model.top_filialen.items():
-            print(f"{day}: Filiale {index + 1} mit Umsatz {value}")
+            top_filiale = max(sales, key=lambda x: x[1])
+            print(f"{day}: {top_filiale[0]} mit Umsatz {top_filiale[1]:.2f}")
+        print("\nÜbersicht der umsatzstärksten Filialen:")
+        for filiale, count in self.view_model.overview.items():
+            print(f"{filiale}: {count} Tage")
 
     def analyze_window(self):
         # Analysieren und Ergebnis im Fenster anzeigen
@@ -71,10 +72,9 @@ class SalesView:
         result_window = tk.Toplevel(self.root)
         result_window.title("Analyseergebnisse")
 
-        tk.Label(result_window, text="Sortierte Umsätze:").pack()
         for day, sales in self.view_model.sorted_sales.items():
-            tk.Label(result_window, text=f"{day}: {sales}").pack()
-
-        tk.Label(result_window, text="\nTop-Filialen:").pack()
-        for day, (index, value) in self.view_model.top_filialen.items():
-            tk.Label(result_window, text=f"{day}: Filiale {index + 1} mit Umsatz {value}").pack()
+            tk.Label(result_window, text=f"{day}:").pack(anchor='w')
+            top_filiale = max(sales, key=lambda x: x[1])
+            for file_name, value in sales:
+                color = 'green' if (file_name, value) == top_filiale else 'black'
+                tk.Label(result_window, text=f"  {file_name}: {value:.2f}", fg=color).pack(anchor='w')

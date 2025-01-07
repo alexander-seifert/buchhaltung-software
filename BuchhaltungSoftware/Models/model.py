@@ -1,16 +1,18 @@
 import csv
 
+
 class SalesModel:
     def __init__(self):
         self.sales_data = {}
 
     def load_csv(self, file_path):
         # Lade CSV-Daten mit spezifischer Kodierung und speichere sie
+        file_name = file_path.split('/')[-1]
         with open(file_path, newline='', encoding='latin1') as csvfile:
             reader = csv.reader(csvfile, delimiter=';')
             days = next(reader)  # Erste Zeile enthält die Wochentage
-            self.sales_data = {day.strip(): [] for day in days}
-
+            if not self.sales_data:
+                self.sales_data = {day.strip(): [] for day in days}
             for row in reader:
                 for day, value in zip(days, row):
                     cleaned_value = (
@@ -21,21 +23,44 @@ class SalesModel:
                     )
                     try:
                         if cleaned_value:
-                            self.sales_data[day.strip()].append(float(cleaned_value))
+                            self.sales_data[day.strip()].append((file_name, float(cleaned_value)))
                     except ValueError:
                         raise ValueError(f"Ungültiges Zahlenformat: {value}")
 
     def get_sorted_sales(self):
-        # Gibt eine sortierte Liste der Einnahmen pro Tag zurück
+        # Sortiere die Umsätze jeder Filiale pro Tag alphabetisch nach Filialnamen
         sorted_data = {}
         for day, values in self.sales_data.items():
-            sorted_data[day] = sorted(values, reverse=True)
+            sorted_data[day] = sorted(values, key=lambda x: x[0])
         return sorted_data
 
-    def get_top_filialen(self):
-        # Ermittelt die umsatzstärkste Filiale für jeden Wochentag
-        top_filialen = {}
-        for day, values in self.sales_data.items():
-            max_value = max(values)
-            top_filialen[day] = (values.index(max_value), max_value)
-        return top_filialen
+    def get_overview(self):
+        # Übersicht, welche Filialen an wie vielen Tagen die höchsten Einnahmen hatten
+        overview = {}
+        for day, sales in self.get_sorted_sales().items():
+            top_filiale = max(sales, key=lambda x: x[1])
+            if top_filiale[0] not in overview:
+                overview[top_filiale[0]] = 0
+            overview[top_filiale[0]] += 1
+        return overview
+
+
+class SalesViewModel:
+    def __init__(self):
+        self.model = SalesModel()
+        self.sales_data = {}
+        self.sorted_sales = {}
+        self.overview = {}
+
+    def load_file(self, file_path):
+        # Lädt die Datei und aktualisiert die Daten
+        try:
+            self.model.load_csv(file_path)
+            self.sales_data = self.model.sales_data
+        except UnicodeDecodeError:
+            raise ValueError("Die Datei ist nicht im erwarteten Format. Bitte überprüfen Sie die Kodierung.")
+
+    def analyze_sales(self):
+        # Analysiert die Verkäufe und aktualisiert die ViewModel-Daten
+        self.sorted_sales = self.model.get_sorted_sales()
+        self.overview = self.model.get_overview()
